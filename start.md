@@ -13,3 +13,9 @@ https://www.digitalocean.com/community/tutorials/how-to-harden-openssh-on-ubuntu
 https://linuxize.com/post/how-to-set-up-ssh-keys-on-ubuntu-1804/
 
 $ useradd -m -p EncryptedPasswordHere username
+
+
+#-------terraform kubernetes kwyword-----------
+
+github terraform kubernetes spring boot kafka
+github terraform kubernetes wordpress digitalocean

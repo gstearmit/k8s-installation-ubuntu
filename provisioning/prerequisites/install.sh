@@ -34,12 +34,15 @@ apt-get update
 
 echo "[TASK 6] Install kubelet/kubeadm/kubectl"
 apt-get install -y kubelet kubeadm kubectl 
+systemctl enable kubelet
+systemctl start kubelet
+
 
 echo "--> install sed : Tìm và thay thế chuỗi ký tự trong một file "
 apt-get install sed -y
 
 # https://www.edureka.co/blog/install-kubernetes-on-ubuntu
-echo "--> Cập nhật cấu hình Kubernetes"
+echo "--> Updating Kubernetes Configuration : Cập nhật cấu hình Kubernetes"
 sed -i 's/cgroup-driver=systemd/cgroup-driver=cgroupfs/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 echo "------End Install  prerequisites\install.sh -----------"
