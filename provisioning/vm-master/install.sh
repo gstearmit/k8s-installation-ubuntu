@@ -2,6 +2,9 @@
 
 figlet MASTER
 
+echo "------Start Install  vm-master\install.sh -----------"
+
+
 echo "[TASK 2] Start master"
 kubeadm init --ignore-preflight-errors all --pod-network-cidr=10.244.0.0/16 --token-ttl 0
 
@@ -36,3 +39,5 @@ cat >>/etc/hosts<<EOF
 EOF
 systemctl restart nfs-kernel-server
 exportfs -a
+
+echo "------End Install  prerequisites\install.sh -----------"

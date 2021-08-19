@@ -3,7 +3,7 @@
 ![enter image description here](https://lh3.googleusercontent.com/HmD5OdlqyD9vaJ4B1MUoX6yhgvLWyQvUyw0lNeLimav6UqRa3MSMnFxqTIfB8rMnu6YoFrIOlaqJrw)
 ## About...
 
-*This repository is used to create ***Kubernetes Cluster*** using **8** simple steps on ***bare VM's**** 
+# *This repository is used to create ***Kubernetes Cluster*** using **8** simple steps on # ***bare VM's**** 
 
 
 ## Table of Contents
@@ -191,3 +191,5 @@
 ## What are the addons provided ?
 * `kubernetes dashboard`
 * `helm`
+
+
