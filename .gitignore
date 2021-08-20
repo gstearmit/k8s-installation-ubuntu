@@ -1,0 +1,6 @@
+.idea
+#----.vagrant-------
+provisioning/vm-master/.vagrant/*
+provisioning/vm-worker/k8s-worker-3/.vagrant/*
+provisioning/vm-worker/k8s-worker-2/.vagrant/*
+provisioning/vm-worker/k8s-worker-1/.vagrant/*

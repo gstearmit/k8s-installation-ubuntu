@@ -1,0 +1,70 @@
+# vagrant up
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-18.04"
+  config.vm.box_version = "202107.28.0"
+  # https://vagrantcloud.com/bento/boxes/ubuntu-18.04/versions/202107.28.0/providers/virtualbox.box
+  
+  config.vm.network "private_network", ip: "100.10.10.101"
+  config.vm.hostname = "k8s-worker-1.k8s-phuchc.local"
+  config.vm.boot_timeout = 100
+
+  # config.vm.box = "ubuntu/hirsute64" 
+  # config.vm.box_version = "20210804.0.0"
+  # config.vm.box_url =  "file://C:\Users\advgl\Downloads\VirtualBox-images/hirsute-server-cloudimg-amd64-vagrant.box"
+
+  config.vm.provider "virtualbox" do |vb|
+     vb.name = "k8s-worker-1.k8s-phuchc.local"
+     vb.cpus = 4
+     vb.memory = "8192"
+  end
+
+  # Chay cac goi can thiet ban dau
+  config.vm.provision "shell", path: "./../../prerequisites/install-components.sh"
+
+  # Chạy file 00.install-master-node.sh sau khi nạp Box
+  config.vm.provision "shell", path: "./../install-worker.sh"
+
+  # Chạy các lệnh shell
+  # https://stackoverflow.com/questions/2150882/how-to-automatically-add-user-account-and-password-with-a-bash-script
+
+  # Pass https://www.digitalocean.com/community/tutorials/how-to-harden-openssh-on-ubuntu-18-04 
+
+  config.vm.provision "shell", inline: <<-SHELL
+    echo "--> Đặt pass 123 có tài khoản root và cho phép SSH"
+    # Đặt pass 123 có tài khoản root và cho phép SSH
+    echo "123" | passwd   root
+    echo "--> Bat đăng nhập qua SSH với tư cách là người dùng root "
+    sed -i 's/^PermitRootLogin no/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+    # echo "--> Bat xác thực mật khẩu SSH để ngăn mật khẩu người dùng bị rò rỉ  "
+    # sed -i 's/^PasswordAuthentication  yes/PasswordAuthentication  no/' /etc/ssh/sshd_config
+
+    # echo "--> Disable root login and password based login  "
+    # sed -i 's/^ChallengeResponseAuthentication   yes/ChallengeResponseAuthentication   no/' /etc/ssh/sshd_config
+    # sed -i 's/^UsePAM    yes/UsePAM    no/' /etc/ssh/sshd_config
+
+    echo "--> Login with SSH user that has no password set  "
+    sed -i 'PermitEmptyPasswords yes' /etc/ssh/sshd_config 
+
+    useradd -m -s /bin/bash phuchc
+    echo "phuchc:123@123" | chpasswd
+
+    sudo usermod -aG sudo phuchc
+
+    echo "--> allow user Phuchc ssh phuchc@100.10.10.101 "
+    sed -i 'AllowUsers phuchc' /etc/ssh/sshd_config
+
+    systemctl restart sshd
+    echo "--> systemctl restart sshd : done"
+    
+# Ghi nội dung sau ra file /etc/hosts để truy cập được các máy theo HOSTNAME
+cat >>/etc/hosts<<EOF
+100.10.10.100 k8s-master.k8s-phuchc.local
+100.10.10.101 k8s-worker-1.k8s-phuchc.local
+100.10.10.102 k8s-worker-2.k8s-phuchc.local
+100.10.10.103 k8s-worker-3.k8s-phuchc.local
+EOF
+
+  SHELL
+end

@@ -13,12 +13,26 @@ echo "[TASK 3] Install kubeconfig"
 mkdir -p $HOME/.kube
 sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
+sudo apt-get install -y bash-completion
+source <(kubectl completion bash)
+echo "source <(kubectl completion bash)" >> ~/.bashrc
 
 kubectl get pods -o wide --all-namespaces
 
 
 echo "[TASK 4] Install Calico"
-kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml 
+# kubectl apply -f https://docs.projectcalico.org/v3.0/getting-started/kubernetes/installation/hosted/kubeadm/1.7/calico.yaml 
+# Install Calico network. Ref. https://docs.projectcalico.org/v3.11/getting-started/kubernetes/installation/calico
+kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/rbac/rbac-kdd-calico.yaml
+kubectl apply -f https://docs.projectcalico.org/v3.11/manifests/calico.yaml
+
+# Verify installation
+kubectl get pods --all-namespaces
+echo ;echo "--> Complete installation of master node"
+echo "--> Run command bellow after run '01.add-worker-node.sh' on worker node"
+
+sudo kubeadm token create --print-join-command
+
 
 
 echo "[TASK 5] Display PODS"
@@ -32,7 +46,7 @@ kubectl apply -f kubernetes-dashboard-rbac.yaml
 echo "[TASK 7] Display All Services"
 kubectl get services -n kube-system 
 
-kubectl proxy
+# kubectl proxy
 
 # http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 echo "--> link access Dashboard admin : "
